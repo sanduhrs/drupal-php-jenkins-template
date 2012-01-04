@@ -1,3 +1,4 @@
+# $Id: robots.txt,v 1.9 2007/06/27 22:37:44 goba Exp $
 #
 # robots.txt
 #
@@ -19,42 +20,44 @@
 User-agent: *
 Crawl-delay: 10
 # Directories
+Disallow: /database/
 Disallow: /includes/
 Disallow: /misc/
 Disallow: /modules/
-Disallow: /profiles/
-Disallow: /scripts/
+Disallow: /sites/
 Disallow: /themes/
+Disallow: /scripts/
+Disallow: /updates/
+Disallow: /profiles/
 # Files
-Disallow: /CHANGELOG.txt
+Disallow: /xmlrpc.php
 Disallow: /cron.php
-Disallow: /INSTALL.mysql.txt
-Disallow: /INSTALL.pgsql.txt
-Disallow: /INSTALL.sqlite.txt
+Disallow: /update.php
 Disallow: /install.php
 Disallow: /INSTALL.txt
-Disallow: /LICENSE.txt
+Disallow: /INSTALL.mysql.txt
+Disallow: /INSTALL.pgsql.txt
+Disallow: /CHANGELOG.txt
 Disallow: /MAINTAINERS.txt
-Disallow: /update.php
+Disallow: /LICENSE.txt
 Disallow: /UPGRADE.txt
-Disallow: /xmlrpc.php
 # Paths (clean URLs)
 Disallow: /admin/
 Disallow: /comment/reply/
-Disallow: /filter/tips/
+Disallow: /contact/
+Disallow: /logout/
 Disallow: /node/add/
 Disallow: /search/
 Disallow: /user/register/
 Disallow: /user/password/
 Disallow: /user/login/
-Disallow: /user/logout/
 # Paths (no clean URLs)
 Disallow: /?q=admin/
 Disallow: /?q=comment/reply/
-Disallow: /?q=filter/tips/
+Disallow: /?q=contact/
+Disallow: /?q=logout/
 Disallow: /?q=node/add/
 Disallow: /?q=search/
 Disallow: /?q=user/password/
 Disallow: /?q=user/register/
 Disallow: /?q=user/login/
-Disallow: /?q=user/logout/

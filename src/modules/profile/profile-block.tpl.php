@@ -1,12 +1,13 @@
 <?php
+// $Id: profile-block.tpl.php,v 1.2 2007/08/07 08:39:35 goba Exp $
 
 /**
- * @file
+ * @file profile-block.tpl.php
  * Default theme implementation for displaying a users profile within a
  * block. It only shows in relation to a node displayed as a full page.
  *
  * Available variables:
- * - $user_picture: Image configured for the account linking to the users page.
+ * - $picture: Image configured for the account linking to the users page.
  * - $profile: Keyed array of all profile fields that have a value.
  *
  * Each $field in $profile contains:
@@ -29,11 +30,11 @@
  * @see template_preprocess_profile_block()
  */
 ?>
-<?php print $user_picture; ?>
+<?php print $picture; ?>
 
-<?php foreach ($profile as $field): ?>
+<?php foreach ($profile as $field) : ?>
   <p>
-    <?php if ($field->type != 'checkbox'): ?>
+    <?php if ($field->type != 'checkbox') : ?>
       <strong><?php print $field->title; ?></strong><br />
     <?php endif; ?>
     <?php print $field->value; ?>

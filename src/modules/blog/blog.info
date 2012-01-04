@@ -1,12 +1,12 @@
+; $Id: blog.info,v 1.5 2007/06/08 05:50:53 dries Exp $
 name = Blog
-description = Enables multi-user blogs.
-package = Core
+description = Enables keeping easily and regularly updated user web pages or blogs.
+package = Core - optional
 version = VERSION
-core = 7.x
-files[] = blog.test
+core = 6.x
 
-; Information added by drupal.org packaging script on 2011-12-05
-version = "7.10"
+; Information added by drupal.org packaging script on 2008-02-13
+version = "6.0"
 project = "drupal"
-datestamp = "1323125439"
+datestamp = "1202913006"
 

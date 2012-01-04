@@ -1,37 +1,46 @@
 <?php
+// $Id: user-profile.tpl.php,v 1.2 2007/08/07 08:39:36 goba Exp $
 
 /**
- * @file
+ * @file user-profile.tpl.php
  * Default theme implementation to present all user profile data.
  *
  * This template is used when viewing a registered member's profile page,
  * e.g., example.com/user/123. 123 being the users ID.
  *
- * Use render($user_profile) to print all profile items, or print a subset
- * such as render($user_profile['user_picture']). Always call
- * render($user_profile) at the end in order to print all remaining items. If
- * the item is a category, it will contain all its profile items. By default,
- * $user_profile['summary'] is provided, which contains data on the user's
- * history. Other data can be included by modules. $user_profile['user_picture']
- * is available for showing the account picture.
+ * By default, all user profile data is printed out with the $user_profile
+ * variable. If there is a need to break it up you can use $profile instead.
+ * It is keyed to the name of each category or other data attached to the
+ * account. If it is a category it will contain all the profile items. By
+ * default $profile['summary'] is provided which contains data on the user's
+ * history. Other data can be included by modules. $profile['picture'] is
+ * available by default showing the account picture.
  *
- * Available variables:
- *   - $user_profile: An array of profile items. Use render() to print them.
- *   - Field variables: for each field instance attached to the user a
- *     corresponding variable is defined; e.g., $account->field_example has a
- *     variable $field_example defined. When needing to access a field's raw
- *     values, developers/themers are strongly encouraged to use these
- *     variables. Otherwise they will have to explicitly specify the desired
- *     field language, e.g. $account->field_example['en'], thus overriding any
- *     language negotiation rule that was previously applied.
+ * Also keep in mind that profile items and their categories can be defined by
+ * site administrators. They are also available within $profile. For example,
+ * if a site is configured with a category of "contact" with
+ * fields for of addresses, phone numbers and other related info, then doing a
+ * straight print of $profile['contact'] will output everything in the
+ * category. This is useful for altering source order and adding custom
+ * markup for the group.
+ *
+ * To check for all available data within $profile, use the code below.
+ *
+ *   <?php print '<pre>'. check_plain(print_r($profile, 1)) .'</pre>'; ?>
  *
  * @see user-profile-category.tpl.php
- *   Where the html is handled for the group.
- * @see user-profile-item.tpl.php
- *   Where the html is handled for each item in the group.
+ *      where the html is handled for the group.
+ * @see user-profile-field.tpl.php
+ *      where the html is handled for each item in the group.
+ *
+ * Available variables:
+ * - $user_profile: All user profile data. Ready for print.
+ * - $profile: Keyed array of profile categories and their items or other data
+ *   provided by modules.
+ *
  * @see template_preprocess_user_profile()
  */
 ?>
-<div class="profile"<?php print $attributes; ?>>
-  <?php print render($user_profile); ?>
+<div class="profile">
+  <?php print $user_profile; ?>
 </div>

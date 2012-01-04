@@ -1,15 +1,40 @@
 <?php
+// $Id: statistics.install,v 1.13 2007/12/18 12:59:22 dries Exp $
 
 /**
- * @file
- * Install, update and uninstall functions for the statistics module.
+ * Implementation of hook_install().
  */
+function statistics_install() {
+  // Create tables.
+  drupal_install_schema('statistics');
+}
 
 /**
- * Implements hook_uninstall().
+ * Changes session ID  field to VARCHAR(64) to add support for SHA-1 hashes.
+ */
+function statistics_update_1000() {
+  $ret = array();
+
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {accesslog} CHANGE COLUMN sid sid varchar(64) NOT NULL default ''");
+      break;
+    case 'pgsql':
+      db_change_column($ret, 'accesslog', 'sid', 'sid', 'varchar(64)', array('not null' => TRUE, 'default' => "''"));
+      break;
+  }
+
+  return $ret;
+}
+
+/**
+ * Implementation of hook_uninstall().
  */
 function statistics_uninstall() {
-  // Remove variables.
+  // Remove tables.
+  drupal_uninstall_schema('statistics');
+
   variable_del('statistics_count_content_views');
   variable_del('statistics_enable_access_log');
   variable_del('statistics_flush_accesslog_timer');
@@ -20,67 +45,68 @@ function statistics_uninstall() {
 }
 
 /**
- * Implements hook_schema().
+ * Implementation of hook_schema().
  */
 function statistics_schema() {
   $schema['accesslog'] = array(
-    'description' => 'Stores site access information for statistics.',
+    'description' => t('Stores site access information for statistics.'),
     'fields' => array(
       'aid' => array(
         'type' => 'serial',
         'not null' => TRUE,
-        'description' => 'Primary Key: Unique accesslog ID.',
+        'description' => t('Primary Key: Unique accesslog ID.'),
       ),
       'sid' => array(
         'type' => 'varchar',
-        'length' => 128,
+        'length' => 64,
         'not null' => TRUE,
         'default' => '',
-        'description' => 'Browser session ID of user that visited page.',
+        'description' => t('Browser session ID of user that visited page.'),
       ),
       'title' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => FALSE,
-        'description' => 'Title of page visited.',
+        'description' => t('Title of page visited.'),
       ),
       'path' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => FALSE,
-        'description' => 'Internal path to page visited (relative to Drupal root.)',
+        'description' => t('Internal path to page visited (relative to Drupal root.)'),
       ),
       'url' => array(
-        'type' => 'text',
+        'type' => 'varchar',
+        'length' => 255,
         'not null' => FALSE,
-        'description' => 'Referrer URI.',
+        'description' => t('Referrer URI.'),
       ),
       'hostname' => array(
         'type' => 'varchar',
         'length' => 128,
         'not null' => FALSE,
-        'description' => 'Hostname of user that visited the page.',
+        'description' => t('Hostname of user that visited the page.'),
       ),
       'uid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => FALSE,
         'default' => 0,
-        'description' => 'User {users}.uid that visited the page.',
+        'description' => t('User {users}.uid that visited the page.'),
       ),
       'timer' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'Time in milliseconds that the page took to load.',
+        'description' => t('Time in milliseconds that the page took to load.'),
       ),
       'timestamp' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'Timestamp of when the page was visited.',
+        'description' => t('Timestamp of when the page was visited.'),
       ),
     ),
     'indexes' => array(
@@ -88,71 +114,8 @@ function statistics_schema() {
       'uid' => array('uid'),
     ),
     'primary key' => array('aid'),
-    'foreign keys' => array(
-      'visitor' => array(
-        'table' => 'users',
-        'columns' => array('uid' => 'uid'),
-      ),
-    ),
-  );
-
-  $schema['node_counter'] = array(
-    'description' => 'Access statistics for {node}s.',
-    'fields' => array(
-      'nid' => array(
-        'description' => 'The {node}.nid for these statistics.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'totalcount' => array(
-        'description' => 'The total number of times the {node} has been viewed.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'big',
-      ),
-      'daycount' => array(
-        'description' => 'The total number of times the {node} has been viewed today.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'medium',
-      ),
-      'timestamp' => array(
-        'description' => 'The most recent time the {node} has been viewed.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-    ),
-    'primary key' => array('nid'),
   );
 
   return $schema;
 }
 
-/**
- * @addtogroup updates-6.x-to-7.x
- * @{
- */
-
-/**
- * Update the {accesslog}.sid column to match the length of {sessions}.sid
- */
-function statistics_update_7000() {
-  db_change_field('accesslog', 'sid', 'sid', array(
-    'type' => 'varchar',
-    'length' => 128,
-    'not null' => TRUE,
-    'default' => '',
-    'description' => 'Browser session ID of user that visited page.',
-  ));
-}
-
-/**
- * @} End of "addtogroup updates-6.x-to-7.x"
- */

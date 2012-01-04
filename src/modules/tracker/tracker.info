@@ -1,13 +1,13 @@
+; $Id: tracker.info,v 1.5 2007/07/04 10:54:26 goba Exp $
 name = Tracker
-description = Enables tracking of recent content for users.
+description = Enables tracking of recent posts for users.
 dependencies[] = comment
-package = Core
+package = Core - optional
 version = VERSION
-core = 7.x
-files[] = tracker.test
+core = 6.x
 
-; Information added by drupal.org packaging script on 2011-12-05
-version = "7.10"
+; Information added by drupal.org packaging script on 2008-02-13
+version = "6.0"
 project = "drupal"
-datestamp = "1323125439"
+datestamp = "1202913006"
 

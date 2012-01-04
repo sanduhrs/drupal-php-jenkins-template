@@ -1,13 +1,12 @@
+; $Id: contact.info,v 1.4 2007/06/08 05:50:54 dries Exp $
 name = Contact
 description = Enables the use of both personal and site-wide contact forms.
-package = Core
+package = Core - optional
 version = VERSION
-core = 7.x
-files[] = contact.test
-configure = admin/structure/contact
+core = 6.x
 
-; Information added by drupal.org packaging script on 2011-12-05
-version = "7.10"
+; Information added by drupal.org packaging script on 2008-02-13
+version = "6.0"
 project = "drupal"
-datestamp = "1323125439"
+datestamp = "1202913006"
 

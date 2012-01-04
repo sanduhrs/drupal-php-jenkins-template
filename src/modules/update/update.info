@@ -1,13 +1,12 @@
-name = Update manager
-description = Checks for available updates, and can securely install or update modules and themes via a web interface.
+; $Id: update.info,v 1.1 2007/07/11 15:15:40 dries Exp $
+name = Update status
+description = Checks the status of available updates for Drupal and your installed modules and themes.
 version = VERSION
-package = Core
-core = 7.x
-files[] = update.test
-configure = admin/reports/updates/settings
+package = Core - optional
+core = 6.x
 
-; Information added by drupal.org packaging script on 2011-12-05
-version = "7.10"
+; Information added by drupal.org packaging script on 2008-02-13
+version = "6.0"
 project = "drupal"
-datestamp = "1323125439"
+datestamp = "1202913006"
 

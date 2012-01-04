@@ -1,14 +1,12 @@
+; $Id: book.info,v 1.5 2007/07/30 18:20:21 dries Exp $
 name = Book
-description = Allows users to create and organize related content in an outline.
-package = Core
+description = Allows users to structure site pages in a hierarchy or outline.
+package = Core - optional
 version = VERSION
-core = 7.x
-files[] = book.test
-configure = admin/content/book/settings
-stylesheets[all][] = book.css
+core = 6.x
 
-; Information added by drupal.org packaging script on 2011-12-05
-version = "7.10"
+; Information added by drupal.org packaging script on 2008-02-13
+version = "6.0"
 project = "drupal"
-datestamp = "1323125439"
+datestamp = "1202913006"
 

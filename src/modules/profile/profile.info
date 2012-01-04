@@ -1,18 +1,12 @@
+; $Id: profile.info,v 1.4 2007/06/08 05:50:55 dries Exp $
 name = Profile
 description = Supports configurable user profiles.
-package = Core
+package = Core - optional
 version = VERSION
-core = 7.x
-files[] = profile.test
-configure = admin/config/people/profile
-; The Profile module is deprecated, and included in Drupal 7 for legacy
-; purposes only. By default, the module will be hidden from the UI unless you
-; are upgrading a site that uses the Profile module to extend user profiles.
-; See user_system_info_alter().
-hidden = TRUE
+core = 6.x
 
-; Information added by drupal.org packaging script on 2011-12-05
-version = "7.10"
+; Information added by drupal.org packaging script on 2008-02-13
+version = "6.0"
 project = "drupal"
-datestamp = "1323125439"
+datestamp = "1202913006"
 

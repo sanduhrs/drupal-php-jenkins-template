@@ -1,12 +1,12 @@
+; $Id: openid.info,v 1.2 2007/06/22 22:26:43 unconed Exp $
 name = OpenID
 description = "Allows users to log into your site using OpenID."
 version = VERSION
-package = Core
-core = 7.x
-files[] = openid.test
+package = Core - optional
+core = 6.x
 
-; Information added by drupal.org packaging script on 2011-12-05
-version = "7.10"
+; Information added by drupal.org packaging script on 2008-02-13
+version = "6.0"
 project = "drupal"
-datestamp = "1323125439"
+datestamp = "1202913006"
 

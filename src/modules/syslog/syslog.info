@@ -1,12 +1,12 @@
+; $Id: syslog.info,v 1.2 2007/06/08 05:50:56 dries Exp $
 name = Syslog
 description = Logs and records system events to syslog.
-package = Core
+package = Core - optional
 version = VERSION
-core = 7.x
-files[] = syslog.test
+core = 6.x
 
-; Information added by drupal.org packaging script on 2011-12-05
-version = "7.10"
+; Information added by drupal.org packaging script on 2008-02-13
+version = "6.0"
 project = "drupal"
-datestamp = "1323125439"
+datestamp = "1202913006"
 

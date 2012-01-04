@@ -1,7 +1,8 @@
 <?php
+// $Id: book-export-html.tpl.php,v 1.1 2007/11/04 14:29:09 goba Exp $
 
 /**
- * @file
+ * @file book-export-html.tpl.php
  * Default theme implementation for printed version of book outline.
  *
  * Available variables:
@@ -10,7 +11,7 @@
  * - $language: Language code. e.g. "en" for english.
  * - $language_rtl: TRUE or FALSE depending on right to left language scripts.
  * - $base_url: URL to home page.
- * - $contents: Nodes within the current outline rendered through
+ * - $content: Nodes within the current outline rendered through
  *   book-node-export-html.tpl.php.
  *
  * @see template_preprocess_book_export_html()
@@ -40,11 +41,13 @@
      */
     $div_close = '';
     ?>
-    <?php for ($i = 1; $i < $depth; $i++): ?>
+    <?php for ($i = 1; $i < $depth; $i++) : ?>
       <div class="section-<?php print $i; ?>">
       <?php $div_close .= '</div>'; ?>
     <?php endfor; ?>
+
     <?php print $contents; ?>
     <?php print $div_close; ?>
+
   </body>
 </html>

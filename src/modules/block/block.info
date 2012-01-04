@@ -1,13 +1,12 @@
+; $Id: block.info,v 1.4 2007/06/08 05:50:53 dries Exp $
 name = Block
-description = Controls the visual building blocks a page is constructed with. Blocks are boxes of content rendered into an area, or region, of a web page.
-package = Core
+description = Controls the boxes that are displayed around the main content.
+package = Core - required
 version = VERSION
-core = 7.x
-files[] = block.test
-configure = admin/structure/block
+core = 6.x
 
-; Information added by drupal.org packaging script on 2011-12-05
-version = "7.10"
+; Information added by drupal.org packaging script on 2008-02-13
+version = "6.0"
 project = "drupal"
-datestamp = "1323125439"
+datestamp = "1202913006"
 

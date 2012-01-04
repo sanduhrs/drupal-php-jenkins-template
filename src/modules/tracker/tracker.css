@@ -1,7 +1,8 @@
+/* $Id: tracker.css,v 1.1 2006/08/14 07:14:50 drumm Exp $ */
 
-.page-tracker td.replies {
+#tracker td.replies {
   text-align: center;
 }
-.page-tracker table {
+#tracker table {
   width: 100%;
 }

@@ -1,6 +1,6 @@
+/* $Id: dblog-rtl.css,v 1.2 2007/11/27 12:09:26 goba Exp $ */
 
-.form-item-type,
-.form-item-severity {
+#dblog-filter-form .form-item {
   float: right;
   padding-right: 0;
   padding-left: .8em;
