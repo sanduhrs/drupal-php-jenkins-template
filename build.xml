@@ -2,7 +2,7 @@
 
 <project name="Drupal" default="build">
  <target name="build"
-   depends="prepare,simpletest,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,doxygen,phpcb"/>
+   depends="prepare,install,simpletest,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,doxygen,phpcb"/>
 
  <target name="build-parallel"
    depends="prepare,lint,tools-parallel,phpcb"/>
@@ -47,7 +47,7 @@
   <mkdir dir="${basedir}/build/coverage"/>
   <mkdir dir="${basedir}/build/logs"/>
   <mkdir dir="${basedir}/build/tests"/>
-  <!-- Allow apache to write to the folder -->
+  <!-- Allow apache to write to the tests folder -->
   <chmod dir="${basedir}/build/tests" perm="777"/>
   <mkdir dir="${basedir}/build/pdepend"/>
  </target>
@@ -69,8 +69,8 @@
   </apply>
  </target>
 
- <target name="simpletest"
-         description="Run Drupal testsuite">
+ <target name="install"
+         description="Install Drupal">
 
   <!-- Install Drupal -->
   <exec executable="drush">
@@ -81,10 +81,14 @@
    <arg value="--db-url=mysql://root:sfauditor@localhost/drpl_7_drupal_php_jenkins_template" />
   </exec>
 
-  <!-- Allow apache to write to the folder -->
+  <!-- Allow apache to write to the files folder -->
   <chmod dir="${basedir}/src/sites/default/files" perm="777"/>
+ </target>
 
-  <!-- Enable Simpletest -->
+ <target name="simpletest"
+         description="Run Drupal testsuite">
+
+  <!-- Enable Simpletest module -->
   <exec executable="drush">
    <arg value="-r" />
    <arg path="${basedir}/src" />
@@ -93,7 +97,7 @@
    <arg value="simpletest" />
   </exec>
 
-  <!-- Run Simpletest -->
+  <!-- Run Simpletest tests -->
   <exec executable="sudo">
    <arg value="-u" />
    <arg value="www-data" />
