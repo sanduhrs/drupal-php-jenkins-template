@@ -26,6 +26,7 @@
   <delete dir="${basedir}/build/code-browser"/>
   <delete dir="${basedir}/build/coverage"/>
   <delete dir="${basedir}/build/logs"/>
+  <delete dir="${basedir}/build/tests"/>
   <delete dir="${basedir}/build/pdepend"/>
  </target>
 
@@ -35,6 +36,7 @@
   <mkdir dir="${basedir}/build/code-browser"/>
   <mkdir dir="${basedir}/build/coverage"/>
   <mkdir dir="${basedir}/build/logs"/>
+  <mkdir dir="${basedir}/build/tests"/>
   <mkdir dir="${basedir}/build/pdepend"/>
  </target>
 
@@ -79,6 +81,14 @@
    <arg value="-y" />
    <arg value="en" />
    <arg value="simpletest" />
+  </exec>
+
+  <exec executable="drush">
+   <arg value="-r ${basedir}/src" />
+   <arg value="-y" />
+   <arg value="test-run" />
+   <arg value="XMLRPCBasicTestCase" />
+   <arg value="--xml=${basedir}/build/tests" />
   </exec>
  </target>
 
