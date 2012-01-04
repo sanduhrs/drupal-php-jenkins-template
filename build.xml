@@ -76,7 +76,8 @@
   </exec>
 
   <exec executable="sudo">
-   <arg value="-u www-data" />
+   <arg value="-u" />
+   <arg value="www-data" />
    <arg value="drush" />
    <arg value="test-run" />
    <arg value="-r" />
