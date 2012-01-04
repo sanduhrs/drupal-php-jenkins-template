@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.inc,v 1.47 2008/01/09 21:52:43 goba Exp $
+// $Id: xmlrpc.inc,v 1.47.2.2 2008/04/14 18:01:19 dries Exp $
 
 /**
  * @file
@@ -256,7 +256,7 @@ function xmlrpc_message_tag_close($parser, $tag) {
     case 'value':
       // If no type is indicated, the type is string
       // We take special care for empty values
-      if (trim($xmlrpc_message->current_tag_contents) != '' || $xmlrpc_message->last_open == 'value') {
+      if (trim($xmlrpc_message->current_tag_contents) != '' || (isset($xmlrpc_message->last_open) && ($xmlrpc_message->last_open == 'value'))) {
         $value = (string)$xmlrpc_message->current_tag_contents;
         $value_flag = TRUE;
       }
@@ -465,7 +465,7 @@ function _xmlrpc() {
  */
 function xmlrpc_errno() {
   $error = xmlrpc_error();
-  return $error->code;
+  return ($error != NULL ? $error->code : NULL);
 }
 
 /**
@@ -473,5 +473,5 @@ function xmlrpc_errno() {
  */
 function xmlrpc_error_msg() {
   $error = xmlrpc_error();
-  return $error->message;
+  return ($error != NULL ? $error->message : NULL);
 }

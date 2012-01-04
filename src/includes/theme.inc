@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.415 2008/01/27 19:47:06 goba Exp $
+// $Id: theme.inc,v 1.415.2.9 2008/07/09 21:48:28 goba Exp $
 
 /**
  * @file
@@ -330,8 +330,13 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
           if (function_exists($prefix .'_preprocess')) {
             $info['preprocess functions'][] = $prefix .'_preprocess';
           }
+
           if (function_exists($prefix .'_preprocess_'. $hook)) {
             $info['preprocess functions'][] = $prefix .'_preprocess_'. $hook;
+          }
+
+          if (!empty($info['original hook']) && function_exists($prefix .'_preprocess_'. $info['original hook'])) {
+            $info['preprocess functions'][] = $prefix .'_preprocess_'. $info['original hook'];
           }
         }
       }
@@ -343,6 +348,9 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
       }
       elseif (isset($cache[$hook]['preprocess functions']) && is_array($cache[$hook]['preprocess functions'])) {
         $info['preprocess functions'] = array_merge($cache[$hook]['preprocess functions'], $info['preprocess functions']);
+      }
+      elseif (isset($info['original hook']) && isset($cache[$info['original hook']]['preprocess functions']) && is_array($cache[$info['original hook']]['preprocess functions'])) {
+        $info['preprocess functions'] = array_merge($cache[$info['original hook']]['preprocess functions'], $info['preprocess functions']);
       }
       $result[$hook]['preprocess functions'] = $info['preprocess functions'];
     }
@@ -434,9 +442,7 @@ function list_themes($refresh = FALSE) {
     foreach ($themes as $theme) {
       foreach ($theme->info['stylesheets'] as $media => $stylesheets) {
         foreach ($stylesheets as $stylesheet => $path) {
-          if (file_exists($path)) {
-            $theme->stylesheets[$media][$stylesheet] = $path;
-          }
+          $theme->stylesheets[$media][$stylesheet] = $path;
         }
       }
       foreach ($theme->info['scripts'] as $script => $path) {
@@ -725,6 +731,7 @@ function drupal_find_theme_functions($cache, $prefixes) {
             $templates[$new_hook] = array(
               'function' => $match,
               'arguments' => $info['arguments'],
+              'original hook' => $hook,
             );
           }
         }
@@ -817,6 +824,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
             'template' => $file,
             'path' => dirname($files[$match]->filename),
             'arguments' => $info['arguments'],
+            'original hook' => $hook,
           );
         }
       }
@@ -999,7 +1007,7 @@ function theme_render_template($file, $variables) {
  * defaults for the template in case they are not filled in. If the default
  * implementation is a function, by convention it is named theme_HOOK().
  *
- * Each module should provide a default implementation for themes that
+ * Each module should provide a default implementation for theme_hooks that
  * it registers. This implementation may be either a function or a template;
  * if it is a function it must be specified via hook_theme(). By convention,
  * default implementations of theme hooks are named theme_HOOK. Default
@@ -1103,10 +1111,10 @@ function theme_links($links, $attributes = array('class' => 'links')) {
       if ($i == $num_links) {
         $class .= ' last';
       }
-      if (isset($link['href']) && $link['href'] == $_GET['q']) {
+      if (isset($link['href']) && ($link['href'] == $_GET['q'] || ($link['href'] == '<front>' && drupal_is_front_page()))) {
         $class .= ' active';
       }
-      $output .= '<li class="'. $class .'">';
+      $output .= '<li'. drupal_attributes(array('class' => $class)) .'>';
 
       if (isset($link['href'])) {
         // Pass in $link as $options, they share the same keys.
@@ -1454,9 +1462,9 @@ function theme_more_help_link($url) {
 
 /**
  * Return code that emits an XML icon.
- * 
+ *
  * For most use cases, this function has been superseded by theme_feed_icon().
- * 
+ *
  * @see theme_feed_icon()
  * @param $url
  *   The url of the feed.
@@ -1552,7 +1560,7 @@ function theme_username($object) {
     }
 
     if (user_access('access user profiles')) {
-      $output = l($name, 'user/'. $object->uid, array('title' => t('View user profile.')));
+      $output = l($name, 'user/'. $object->uid, array('attributes' => array('title' => t('View user profile.'))));
     }
     else {
       $output = check_plain($name);
@@ -1564,7 +1572,7 @@ function theme_username($object) {
     // aggregator modules). This clause enables modules to display
     // the true author of the content.
     if (!empty($object->homepage)) {
-      $output = l($object->name, $object->homepage, array('rel' => 'nofollow'));
+      $output = l($object->name, $object->homepage, array('attributes' => array('rel' => 'nofollow')));
     }
     else {
       $output = check_plain($object->name);

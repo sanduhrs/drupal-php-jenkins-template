@@ -1,5 +1,5 @@
 <?php
-// $Id: mail.inc,v 1.8 2008/01/25 17:04:00 goba Exp $
+// $Id: mail.inc,v 1.8.2.3 2008/05/19 08:19:00 goba Exp $
 
 /**
  * Compose and optionally send an e-mail message.
@@ -187,6 +187,8 @@ function drupal_mail_send($message) {
       // Note: e-mail uses CRLF for line-endings, but PHP's API requires LF.
       // They will appear correctly in the actual e-mail that is sent.
       str_replace("\r", '', $message['body']),
+      // For headers, PHP's API suggests that we use CRLF normally,
+      // but some MTAs incorrecly replace LF with CRLF. See #234403.
       join("\n", $mimeheaders)
     );
   }
@@ -270,8 +272,8 @@ function drupal_html_to_text($string, $allowed_tags = NULL) {
   $string = _filter_htmlcorrector(filter_xss($string, $allowed_tags));
 
   // Apply inline styles.
-  $string = preg_replace('!</?(em|i)>!i', '/', $string);
-  $string = preg_replace('!</?(strong|b)>!i', '*', $string);
+  $string = preg_replace('!</?(em|i)((?> +)[^>]*)?>!i', '/', $string);
+  $string = preg_replace('!</?(strong|b)((?> +)[^>]*)?>!i', '*', $string);
 
   // Replace inline <a> tags with the text of link and a footnote.
   // 'See <a href="http://drupal.org">the Drupal site</a>' becomes

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.617 2008/01/25 16:19:12 goba Exp $
+// $Id: comment.module,v 1.617.2.2 2008/04/25 20:58:46 goba Exp $
 
 /**
  * @file
@@ -211,6 +211,7 @@ function comment_menu() {
   $items['admin/content/comment/approval'] = array(
     'title' => 'Approval queue',
     'page arguments' => array('approval'),
+    'access arguments' => array('administer comments'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'comment.admin.inc',
   );
@@ -953,13 +954,13 @@ function comment_render($node, $cid = 0) {
     }
     else {
       // Multiple comment view
-      $query_count = 'SELECT COUNT(*) FROM {comments} WHERE nid = %d';
+      $query_count = 'SELECT COUNT(*) FROM {comments} c WHERE c.nid = %d';
       $query = 'SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.signature, u.picture, u.data, c.thread, c.status FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = %d';
 
       $query_args = array($nid);
       if (!user_access('administer comments')) {
         $query .= ' AND c.status = %d';
-        $query_count .= ' AND status = %d';
+        $query_count .= ' AND c.status = %d';
         $query_args[] = COMMENT_PUBLISHED;
       }
 

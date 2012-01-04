@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.63 2008/02/04 12:35:48 goba Exp $
+// $Id: system.admin.inc,v 1.63.2.3 2008/05/19 07:27:35 goba Exp $
 
 /**
  * @file
@@ -1359,7 +1359,7 @@ function system_performance_settings() {
  */
 function system_clear_cache_submit(&$form_state, $form) {
   drupal_flush_all_caches();
-  drupal_set_message('Caches cleared.');
+  drupal_set_message(t('Caches cleared.'));
 }
 
 /**
@@ -1901,10 +1901,10 @@ function theme_admin_page($blocks) {
   $output = '<div class="admin clear-block">';
   $output .= '<div class="compact-link">';
   if (system_admin_compact_mode()) {
-    $output .= l(t('Show descriptions'), 'admin/compact/off', array('title' => t('Expand layout to include descriptions.')));
+    $output .= l(t('Show descriptions'), 'admin/compact/off', array('attributes' => array('title' => t('Expand layout to include descriptions.'))));
   }
   else {
-    $output .= l(t('Hide descriptions'), 'admin/compact/on', array('title' => t('Compress layout by hiding descriptions.')));
+    $output .= l(t('Hide descriptions'), 'admin/compact/on', array('attributes' => array('title' => t('Compress layout by hiding descriptions.'))));
   }
   $output .= '</div>';
 
@@ -2070,7 +2070,7 @@ function theme_system_modules($form) {
         $row[] = '<strong>'. drupal_render($form['name'][$key]) .'</strong>';
       }
 
-      $row[] = drupal_render($form['version'][$key]);
+      $row[] = array('data' => drupal_render($form['version'][$key]), 'class' => 'version');
       $row[] = array('data' => $description, 'class' => 'description');
       $rows[] = $row;
     }

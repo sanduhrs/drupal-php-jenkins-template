@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.204 2008/01/21 15:08:24 goba Exp $
+// $Id: filter.module,v 1.204.2.2 2008/07/09 21:48:28 goba Exp $
 
 /**
  * @file
@@ -82,6 +82,7 @@ function filter_menu() {
   $items['admin/settings/filters/add'] = array(
     'title' => 'Add input format',
     'page callback' => 'filter_admin_format_page',
+    'access arguments' => array('administer filters'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
     'file' => 'filter.admin.inc',
@@ -90,6 +91,7 @@ function filter_menu() {
     'title' => 'Delete input format',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('filter_admin_delete'),
+    'access arguments' => array('administer filters'),
     'type' => MENU_CALLBACK,
     'file' => 'filter.admin.inc',
   );
@@ -120,6 +122,7 @@ function filter_menu() {
     'title' => 'Configure',
     'page callback' => 'filter_admin_configure_page',
     'page arguments' => array(3),
+    'access arguments' => array('administer filters'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
     'file' => 'filter.admin.inc',
@@ -128,6 +131,7 @@ function filter_menu() {
     'title' => 'Rearrange',
     'page callback' => 'filter_admin_order_page',
     'page arguments' => array(3),
+    'access arguments' => array('administer filters'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
     'file' => 'filter.admin.inc',
@@ -928,7 +932,7 @@ function _filter_autop($text) {
  * for scripts and styles.
  */
 function filter_xss_admin($string) {
-  return filter_xss($string, array('a', 'abbr', 'acronym', 'address', 'b', 'bdo', 'big', 'blockquote', 'br', 'caption', 'cite', 'code', 'col', 'colgroup', 'dd', 'del', 'dfn', 'div', 'dl', 'dt', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i', 'img', 'ins', 'kbd', 'li', 'object', 'ol', 'p', 'param', 'pre', 'q', 'samp', 'small', 'span', 'strong', 'sub', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th', 'thead', 'tr', 'tt', 'ul', 'var'));
+  return filter_xss($string, array('a', 'abbr', 'acronym', 'address', 'b', 'bdo', 'big', 'blockquote', 'br', 'caption', 'cite', 'code', 'col', 'colgroup', 'dd', 'del', 'dfn', 'div', 'dl', 'dt', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i', 'img', 'ins', 'kbd', 'li', 'ol', 'p', 'param', 'pre', 'q', 'samp', 'small', 'span', 'strong', 'sub', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th', 'thead', 'tr', 'tt', 'ul', 'var'));
 }
 
 /**

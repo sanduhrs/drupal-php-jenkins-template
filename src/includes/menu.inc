@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.255.2.9 2008/02/27 12:12:01 goba Exp $
+// $Id: menu.inc,v 1.255.2.17 2008/07/09 15:23:50 goba Exp $
 
 /**
  * @file
@@ -514,7 +514,7 @@ function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
   if (!empty($item['description'])) {
     $original_description = $item['description'];
     $item['description'] = t($item['description']);
-    if ($link_translate && $item['options']['attributes']['title'] == $original_description) {
+    if ($link_translate && isset($item['options']['attributes']['title']) && $item['options']['attributes']['title'] == $original_description) {
       $item['localized_options']['attributes']['title'] = $item['description'];
     }
   }
@@ -570,8 +570,11 @@ function _menu_translate(&$router_item, $map, $to_arg = FALSE) {
   $router_item['href'] = implode('/', $link_map);
   $router_item['options'] = array();
   _menu_check_access($router_item, $map);
-
-  _menu_item_localize($router_item, $map);
+  
+  // For performance, don't localize an item the user can't access.
+  if ($router_item['access']) {
+    _menu_item_localize($router_item, $map);
+  }
 
   return $map;
 }
@@ -649,8 +652,10 @@ function _menu_link_translate(&$item) {
       }
       _menu_check_access($item, $map);
     }
-
-    _menu_item_localize($item, $map, TRUE);
+    // For performance, don't localize a link the user can't access.
+    if ($item['access']) {
+      _menu_item_localize($item, $map, TRUE);
+    }
   }
   
   // Allow other customizations - e.g. adding a page-specific query string to the
@@ -772,16 +777,22 @@ function menu_tree_all_data($menu_name = 'navigation', $item = NULL) {
 
   // Use $mlid as a flag for whether the data being loaded is for the whole tree.
   $mlid = isset($item['mlid']) ? $item['mlid'] : 0;
-  // Generate the cache ID.
-  $cid = 'links:'. $menu_name .':all:'. $mlid;
+  // Generate a cache ID (cid) specific for this $menu_name and $item.
+  $cid = 'links:'. $menu_name .':all-cid:'. $mlid;
 
   if (!isset($tree[$cid])) {
     // If the static variable doesn't have the data, check {cache_menu}.
     $cache = cache_get($cid, 'cache_menu');
     if ($cache && isset($cache->data)) {
-      $data = $cache->data;
+      // If the cache entry exists, it will just be the cid for the actual data.
+      // This avoids duplication of large amounts of data.
+      $cache = cache_get($cache->data, 'cache_menu');
+      if ($cache && isset($cache->data)) {
+        $data = $cache->data;
+      }
     }
-    else {
+    // If the tree data was not in the cache, $data will be NULL.
+    if (!isset($data)) {
       // Build and run the query, and build the tree.
       if ($mlid) {
         // The tree is for a single item, so we need to match the values in its
@@ -813,8 +824,13 @@ function menu_tree_all_data($menu_name = 'navigation', $item = NULL) {
         ORDER BY p1 ASC, p2 ASC, p3 ASC, p4 ASC, p5 ASC, p6 ASC, p7 ASC, p8 ASC, p9 ASC", $args), $parents);
       $data['node_links'] = array();
       menu_tree_collect_node_links($data['tree'], $data['node_links']);
-      // Cache the data.
-      cache_set($cid, $data, 'cache_menu');
+      // Cache the data, if it is not already in the cache.
+      $tree_cid = _menu_tree_cid($menu_name, $data);
+      if (!cache_get($tree_cid, 'cache_menu')) {
+        cache_set($tree_cid, $data, 'cache_menu');
+      }
+      // Cache the cid of the (shared) data using the menu and item-specific cid.
+      cache_set($cid, $tree_cid, 'cache_menu');
     }
     // Check access for the current user to each item in the tree.
     menu_tree_check_access($data['tree'], $data['node_links']);
@@ -844,16 +860,22 @@ function menu_tree_page_data($menu_name = 'navigation') {
 
   // Load the menu item corresponding to the current page.
   if ($item = menu_get_item()) {
-    // Generate the cache ID.
-    $cid = 'links:'. $menu_name .':page:'. $item['href'] .':'. (int)$item['access'];
+    // Generate a cache ID (cid) specific for this page.
+    $cid = 'links:'. $menu_name .':page-cid:'. $item['href'] .':'. (int)$item['access'];
 
     if (!isset($tree[$cid])) {
       // If the static variable doesn't have the data, check {cache_menu}.
       $cache = cache_get($cid, 'cache_menu');
       if ($cache && isset($cache->data)) {
-        $data = $cache->data;
+        // If the cache entry exists, it will just be the cid for the actual data.
+        // This avoids duplication of large amounts of data.
+        $cache = cache_get($cache->data, 'cache_menu');
+        if ($cache && isset($cache->data)) {
+          $data = $cache->data;
+        }
       }
-      else {
+      // If the tree data was not in the cache, $data will be NULL.
+      if (!isset($data)) {
         // Build and run the query, and build the tree.
         if ($item['access']) {
           // Check whether a menu link exists that corresponds to the current path.
@@ -909,8 +931,13 @@ function menu_tree_page_data($menu_name = 'navigation') {
           ORDER BY p1 ASC, p2 ASC, p3 ASC, p4 ASC, p5 ASC, p6 ASC, p7 ASC, p8 ASC, p9 ASC", $args), $parents);
         $data['node_links'] = array();
         menu_tree_collect_node_links($data['tree'], $data['node_links']);
-        // Cache the data.
-        cache_set($cid, $data, 'cache_menu');
+        // Cache the data, if it is not already in the cache.
+        $tree_cid = _menu_tree_cid($menu_name, $data);
+        if (!cache_get($tree_cid, 'cache_menu')) {
+          cache_set($tree_cid, $data, 'cache_menu');
+        }
+        // Cache the cid of the (shared) data using the page-specific cid.
+        cache_set($cid, $tree_cid, 'cache_menu');
       }
       // Check access for the current user to each item in the tree.
       menu_tree_check_access($data['tree'], $data['node_links']);
@@ -920,6 +947,13 @@ function menu_tree_page_data($menu_name = 'navigation') {
   }
 
   return array();
+}
+
+/**
+ * Helper function - compute the real cache ID for menu tree data.
+ */
+function _menu_tree_cid($menu_name, $data) {
+  return 'links:'. $menu_name .':tree-data:'. md5(serialize($data));
 }
 
 /**
@@ -1228,6 +1262,14 @@ function menu_navigation_links($menu_name, $level = 0) {
       $l = $item['link']['localized_options'];
       $l['href'] = $item['link']['href'];
       $l['title'] = $item['link']['title'];
+      if ($item['link']['in_active_trail']) {
+        if (empty($l['attributes']['class'])) {
+          $l['attributes']['class'] = 'active-trail';
+        }
+        else {
+          $l['attributes']['class'] .= ' active-trail'; 
+        }
+      }
       // Keyed with unique menu id to generate classes from theme_links().
       $links['menu-'. $item['link']['mlid']] = $l;
     }
@@ -1485,10 +1527,10 @@ function menu_set_active_trail($new_trail = NULL) {
         $curr = FALSE;
       }
       else {
-        // Move to the child link if it's in the active trail.
-        if ($curr['below'] && $curr['link']['in_active_trail']) {
+        // Add the link if it's in the active trail, then move to the link below.
+        if ($curr['link']['in_active_trail']) {
           $trail[] = $curr['link'];
-          $tree = $curr['below'];
+          $tree = $curr['below'] ? $curr['below'] : array();
         }
         list($key, $curr) = each($tree);
       }
@@ -1629,7 +1671,6 @@ function menu_router_build($reset = FALSE) {
       $menu = $cache->data;
     }
     else {
-      db_query('DELETE FROM {menu_router}');
       // We need to manually call each module so that we can know which module
       // a given item came from.
       $callbacks = array();
@@ -1645,7 +1686,6 @@ function menu_router_build($reset = FALSE) {
       // Alter the menu as defined in modules, keys are like user/%user.
       drupal_alter('menu', $callbacks);
       $menu = _menu_router_build($callbacks);
-      cache_set('router:', $menu, 'cache_menu');
     }
   }
   return $menu;
@@ -2225,6 +2265,13 @@ function _menu_router_build($callbacks) {
   }
   array_multisort($sort, SORT_NUMERIC, $menu);
 
+  if (!$menu) {
+    // We must have a serious error - there is no data to save.
+    watchdog('php', 'Menu router rebuild failed - some paths may not work correctly.', array(), WATCHDOG_ERROR);
+    return array();
+  }
+  // Delete the existing router since we have some data to replace it.
+  db_query('DELETE FROM {menu_router}');
   // Apply inheritance rules.
   foreach ($menu as $path => $v) {
     $item = &$menu[$path];
@@ -2246,9 +2293,10 @@ function _menu_router_build($callbacks) {
         if (!isset($item['tab_root']) && !$parent['_tab']) {
           $item['tab_root'] = $parent_path;
         }
-        // If a callback is not found, we try to find the first parent that
-        // has a callback.
-        if (!isset($item['access callback']) && isset($parent['access callback'])) {
+        // If an access callback is not found for a default local task we use
+        // the callback from the parent, since we expect them to be identical.
+        // In all other cases, the access parameters must be specified.
+        if (($item['type'] == MENU_DEFAULT_LOCAL_TASK) && !isset($item['access callback']) && isset($parent['access callback'])) {
           $item['access callback'] = $parent['access callback'];
           if (!isset($item['access arguments']) && isset($parent['access arguments'])) {
             $item['access arguments'] = $parent['access arguments'];
@@ -2326,6 +2374,7 @@ function _menu_router_build($callbacks) {
   $masks = array_keys($masks);
   rsort($masks);
   variable_set('menu_masks', $masks);
+  cache_set('router:', $menu, 'cache_menu');
   return $menu;
 }
 

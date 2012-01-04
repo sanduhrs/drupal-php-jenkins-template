@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.19 2008/01/30 22:11:22 goba Exp $
+// $Id: openid.module,v 1.19.2.3 2008/07/09 21:48:28 goba Exp $
 
 /**
  * @file
@@ -28,8 +28,10 @@ function openid_menu() {
   );
   $items['user/%user/openid/delete'] = array(
     'title' => 'Delete OpenID',
-    'page callback' => 'openid_user_delete',
-    'page arguments' => array(1),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('openid_user_delete_form', 1),
+    'access callback' => 'user_edit_access',
+    'access arguments' => array(1),
     'type' => MENU_CALLBACK,
     'file' => 'openid.pages.inc',
   );
@@ -470,7 +472,7 @@ function openid_authentication_request($claimed_id, $identity, $return_to = '', 
     $request['openid.realm'] = url('', array('absolute' => TRUE));
   }
   else {
-    $request['openid.trust_root'] = $realm;
+    $request['openid.trust_root'] = url('', array('absolute' => TRUE));
   }
 
   // Simple Registration
