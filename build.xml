@@ -59,7 +59,8 @@
   <exec executable="phploc">
    <arg value="--log-csv" />
    <arg value="${basedir}/build/logs/phploc.csv" />
-   <arg value="--suffixes module,info,inc,php,install,engine,js,css,xml,test,html,sh,profile,script" />
+   <arg value="--suffixes" />
+   <arg value="module,info,inc,php,install,engine,js,css,xml,test,html,sh,profile,script" />
    <arg path="${basedir}/src" />
   </exec>
  </target>
