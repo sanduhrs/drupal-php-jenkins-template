@@ -43,7 +43,7 @@
    <arg value="-l" />
 
    <fileset dir="${basedir}/src">
-    <include name="**/*.php" />
+    <include name="**/*.php/*.module/*.inc/*.install/*.engine/*.test/*.profile" />
     <modified />
    </fileset>
   </apply>
@@ -51,8 +51,8 @@
 
  <target name="phploc" description="Measure project size using PHPLOC">
   <exec executable="phploc">
-   <arg value="--log-csv" />
    <arg value="--suffixes=module,info,inc,php,install,engine,js,txt,css,xml,test,html,sh,profile,script" />
+   <arg value="--log-csv" />
    <arg value="${basedir}/build/logs/phploc.csv" />
    <arg path="${basedir}/src" />
   </exec>
