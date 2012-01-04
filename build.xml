@@ -2,7 +2,7 @@
 
 <project name="Drupal" default="build">
  <target name="build"
-   depends="prepare,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,doxygen,phpcb"/>
+   depends="prepare,lint,phploc,simpletest,pdepend,phpmd-ci,phpcs-ci,phpcpd,doxygen,phpcb"/>
 
  <target name="build-parallel"
    depends="prepare,lint,tools-parallel,phpcb"/>
@@ -62,6 +62,23 @@
    <arg value="--suffixes" />
    <arg value="module,info,inc,php,install,engine,js,css,xml,test,html,sh,profile,script" />
    <arg path="${basedir}/src" />
+  </exec>
+ </target>
+
+ <target name="simpletest"
+         description="Calculate software metrics using PHP_Depend">
+  <exec executable="drush">
+   <arg value="-r ${basedir}/src" />
+   <arg value="-y" />
+   <arg value="si" />
+   <arg value="--db-url=mysql:root:sfauditor@localhost/drpl_7_drupal_php_jenkins_template" />
+  </exec>
+
+  <exec executable="drush">
+   <arg value="-r ${basedir}/src" />
+   <arg value="-y" />
+   <arg value="en" />
+   <arg value="simpletest" />
   </exec>
  </target>
 
