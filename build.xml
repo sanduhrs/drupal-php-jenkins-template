@@ -83,8 +83,8 @@
    <arg value="test-run" />
    <arg value="-r" />
    <arg path="${basedir}/src" />
-   <arg value="FilterUnitTestCase" />
    <arg value="--xml=${basedir}/build/tests" />
+   <arg value="--all" />
   </exec>
  </target>
 
