@@ -84,6 +84,7 @@
    <arg value="-r" />
    <arg path="${basedir}/src" />
    <arg value="--xml=${basedir}/build/tests" />
+   <arg value="--uri=http://localhost" />
    <arg value="--all" />
   </exec>
  </target>
