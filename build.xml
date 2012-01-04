@@ -81,7 +81,7 @@
    <arg value="www-data" />
    <arg value="drush" />
    <arg value="test-run" />
-   <arg calue="Actions,Aggregator,AJAX,Batch API,Block,Blog,Book,Bootstrap,Cache,Color,Comment,Contact,Dashboard,Database,DBLog,Entity API,Field API,Field types,Field UI,File,File API,'File API (remote)',Filter,Form API,Forum,Help,Image,Locale,Mail,Menu,Module,Node,OpenID,Path,Path API,PHP,Poll,Profile,RDF,Search,Session,Shortcut,SimpleTest,Syslog,System,Taxonomy,Theme,Tracker,Translation,Trigger,Update,Update API,User,XML-RPC"/>
+   <arg value="Actions,Aggregator,AJAX,Batch API,Block,Blog,Book,Bootstrap,Cache,Color,Comment,Contact,Dashboard,Database,DBLog,Entity API,Field API,Field types,Field UI,File,File API,'File API (remote)',Filter,Form API,Forum,Help,Image,Locale,Mail,Menu,Module,Node,OpenID,Path,Path API,PHP,Poll,Profile,RDF,Search,Session,Shortcut,SimpleTest,Syslog,System,Taxonomy,Theme,Tracker,Translation,Trigger,Update,Update API,User,XML-RPC"/>
    <arg value="-r" />
    <arg path="${basedir}/src" />
    <arg value="--xml=${basedir}/build/tests" />
