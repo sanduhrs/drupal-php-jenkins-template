@@ -102,14 +102,11 @@
    <arg path="${basedir}/src" />
    <arg value="test-run" />
    <arg value="--uri=http://localhost" />
-   <!-- Omit from testing
-     Statistics
+   <!-- Omit from testing Statistics, Upgrade path
      @see http://drupal.org/node/1346772
-
-     Upgrade path
-     @see 
+     <arg value="Actions,Aggregator,AJAX,Batch API,Block,Blog,Book,Bootstrap,Cache,Color,Comment,Contact,Dashboard,Database,DBLog,Entity API,Field API,Field types,Field UI,File,File API,'File API (remote)',Filter,Form API,Forum,Help,Image,Locale,Mail,Menu,Module,Node,OpenID,Path,Path API,PHP,Poll,Profile,RDF,Search,Session,Shortcut,SimpleTest,Statistics,Syslog,System,Taxonomy,Theme,Tracker,Translation,Trigger,Update,Update API,Upgrade path,User,XML-RPC"/>
    -->
-   <arg value="Actions,Aggregator,AJAX,Batch API,Block,Blog,Book,Bootstrap,Cache,Color,Comment,Contact,Dashboard,Database,DBLog,Entity API,Field API,Field types,Field UI,File,File API,'File API (remote)',Filter,Form API,Forum,Help,Image,Locale,Mail,Menu,Module,Node,OpenID,Path,Path API,PHP,Poll,Profile,RDF,Search,Session,Shortcut,SimpleTest,Statistics,Syslog,System,Taxonomy,Theme,Tracker,Translation,Trigger,Update,Update API,Upgrade path,User,XML-RPC"/>
+   <arg value="--all" />
    <arg value="--xml=${basedir}/build/tests" />
   </exec>
  </target>
