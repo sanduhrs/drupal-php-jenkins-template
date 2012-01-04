@@ -70,7 +70,12 @@
 
  <target name="simpletest"
          description="Run Drupal testsuite">
-  <exec executable="drush">
+
+  <!-- Install Drupal -->
+  <exec executable="sudo">
+   <arg value="-u" />
+   <arg value="www-data" />
+   <arg value="drush" />
    <arg value="-r" />
    <arg path="${basedir}/src" />
    <arg value="-y" />
@@ -78,6 +83,7 @@
    <arg value="--db-url=mysql://root:sfauditor@localhost/drpl_7_drupal_php_jenkins_template" />
   </exec>
 
+  <!-- Enable Simpletest -->
   <exec executable="drush">
    <arg value="-r" />
    <arg path="${basedir}/src" />
@@ -86,6 +92,7 @@
    <arg value="simpletest" />
   </exec>
 
+  <!-- Run Simpletest -->
   <exec executable="sudo">
    <arg value="-u" />
    <arg value="www-data" />
