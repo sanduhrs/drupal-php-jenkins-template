@@ -71,6 +71,7 @@
    <arg value="--jdepend-xml=${basedir}/build/logs/jdepend.xml" />
    <arg value="--jdepend-chart=${basedir}/build/pdepend/dependencies.svg" />
    <arg value="--overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg" />
+   <arg value="--suffix=module,info,inc,php,install,engine,test,sh,profile,script" />
    <arg path="${basedir}/src" />
   </exec>
  </target>
