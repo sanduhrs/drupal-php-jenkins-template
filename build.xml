@@ -28,6 +28,13 @@
   <delete dir="${basedir}/build/logs"/>
   <delete dir="${basedir}/build/tests"/>
   <delete dir="${basedir}/build/pdepend"/>
+
+  <exec executable="sudo">
+   <arg value="-u" />
+   <arg value="www-data" />
+   <arg value="drush" />
+   <arg value="test-clean" />
+  </exec>
  </target>
 
  <target name="prepare" depends="clean"
