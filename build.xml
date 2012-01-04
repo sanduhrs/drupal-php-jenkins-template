@@ -47,6 +47,7 @@
   <mkdir dir="${basedir}/build/coverage"/>
   <mkdir dir="${basedir}/build/logs"/>
   <mkdir dir="${basedir}/build/tests"/>
+  <!-- Allow apache to write to the folder -->
   <chmod dir="${basedir}/build/tests" perm="777"/>
   <mkdir dir="${basedir}/build/pdepend"/>
  </target>
@@ -72,16 +73,16 @@
          description="Run Drupal testsuite">
 
   <!-- Install Drupal -->
-  <exec executable="sudo">
-   <arg value="-u" />
-   <arg value="www-data" />
-   <arg value="drush" />
+  <exec executable="drush">
    <arg value="-r" />
    <arg path="${basedir}/src" />
    <arg value="-y" />
    <arg value="si" />
    <arg value="--db-url=mysql://root:sfauditor@localhost/drpl_7_drupal_php_jenkins_template" />
   </exec>
+
+  <!-- Allow apache to write to the folder -->
+  <chmod dir="${basedir}/src/sites/default/files" perm="777"/>
 
   <!-- Enable Simpletest -->
   <exec executable="drush">
@@ -97,10 +98,10 @@
    <arg value="-u" />
    <arg value="www-data" />
    <arg value="drush" />
-   <arg value="test-run" />
-   <arg value="--uri=http://localhost" />
    <arg value="-r" />
    <arg path="${basedir}/src" />
+   <arg value="test-run" />
+   <arg value="--uri=http://localhost" />
    <!-- Omit from testing
      Statistics
      @see http://drupal.org/node/1346772
