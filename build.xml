@@ -76,24 +76,7 @@
    <arg value="si" />
    <arg value="--db-url=mysql:root:sfauditor@localhost/drpl_7_drupal_php_jenkins_template" />
   </exec>
-  <!--
-  <exec executable="drush">
-   <arg value="-r" />
-   <arg path="${basedir}/src" />
-   <arg value="-y" />
-   <arg value="en" />
-   <arg value="simpletest" />
-  </exec>
 
-  <exec executable="drush">
-   <arg value="-r" />
-   <arg path="${basedir}/src" />
-   <arg value="-y" />
-   <arg value="test-run" />
-   <arg value="XMLRPCBasicTestCase" />
-   <arg value="--xml=${basedir}/build/tests" />
-  </exec>
-  -->
  </target>
 
  <target name="pdepend"
