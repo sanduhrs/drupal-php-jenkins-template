@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.756.2.20 2008/07/09 21:48:27 goba Exp $
+// $Id: common.inc,v 1.756.2.24 2008/08/13 23:59:12 drumm Exp $
 
 /**
  * @file
@@ -434,6 +434,16 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
 
   // Parse the URL and make sure we can handle the schema.
   $uri = parse_url($url);
+
+  if ($uri == FALSE) {
+    $result->error = 'unable to parse URL';
+    return $result;
+  }
+
+  if (!isset($uri['scheme'])) {
+    $result->error = 'missing schema';
+    return $result;
+  }
 
   switch ($uri['scheme']) {
     case 'http':
@@ -3234,7 +3244,7 @@ function drupal_write_record($table, &$object, $update = array()) {
   if (empty($schema)) {
     return FALSE;
   }
-  
+
   // Convert to an object if needed.
   if (is_array($object)) {
     $object = (object) $object;

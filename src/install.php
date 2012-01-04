@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.113.2.3 2008/07/09 19:15:59 goba Exp $
+// $Id: install.php,v 1.113.2.5 2008/07/18 07:17:44 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -448,23 +448,41 @@ function install_select_profile() {
 
 /**
  * Form API array definition for the profile selection form.
+ *
+ * @param $form_state
+ *   Array of metadata about state of form processing.
+ * @param $profile_files
+ *   Array of .profile files, as returned from file_scan_directory().
  */
-function install_select_profile_form(&$form_state, $profiles) {
-  foreach ($profiles as $profile) {
+function install_select_profile_form(&$form_state, $profile_files) {
+  $profiles = array();
+  $names = array();
+
+  foreach ($profile_files as $profile) {
     include_once($profile->filename);
-    // Load profile details.
+
+    // Load profile details and store them for later retrieval.
     $function = $profile->name .'_profile_details';
     if (function_exists($function)) {
       $details = $function();
     }
-    // If set, used defined name. Otherwise use file name.
+    $profiles[$profile->name] = $details;
+
+    // Determine the name of the profile; default to file name if defined name
+    // is unspecified.
     $name = isset($details['name']) ? $details['name'] : $profile->name;
+    $names[$profile->name] = $name;
+  }
+
+  // Display radio buttons alphabetically by human-readable name. 
+  natcasesort($names);
+  foreach ($names as $profile => $name) {
     $form['profile'][$name] = array(
       '#type' => 'radio',
       '#value' => 'default',
-      '#return_value' => $profile->name,
+      '#return_value' => $profile,
       '#title' => $name,
-      '#description' => isset($details['description']) ? $details['description'] : '',
+      '#description' => isset($profiles[$profile]['description']) ? $profiles[$profile]['description'] : '',
       '#parents' => array('profile'),
     );
   }
@@ -880,7 +898,12 @@ function install_check_requirements($profile, $verify) {
       }
     }
     if (!$exists) {
-      drupal_set_message(st('The @drupal installer requires that you create %file as part of the installation process, and then make it writable. If you are unsure how to grant file permissions, please consult the <a href="@handbook_url">on-line handbook</a>.', array('@drupal' => drupal_install_profile_name(), '%file' => $file, '@handbook_url' => 'http://drupal.org/server-permissions')), 'error');
+      drupal_set_message(st('The @drupal installer requires that you create a settings file as part of the installation process.
+<ol>
+<li>Copy the %default_file file to %file.</li>
+<li>Change file permissions so that it is writable by the web server. If you are unsure how to grant file permissions, please consult the <a href="@handbook_url">on-line handbook</a>.</li>
+</ol>
+More details about installing Drupal are available in INSTALL.txt.', array('@drupal' => drupal_install_profile_name(), '%file' => $file, '%default_file' => $conf_path .'/default.settings.php', '@handbook_url' => 'http://drupal.org/server-permissions')), 'error');
     }
     elseif (!$writable) {
       drupal_set_message(st('The @drupal installer requires write permissions to %file during the installation process. If you are unsure how to grant file permissions, please consult the <a href="@handbook_url">on-line handbook</a>.', array('@drupal' => drupal_install_profile_name(), '%file' => $file, '@handbook_url' => 'http://drupal.org/server-permissions')), 'error');

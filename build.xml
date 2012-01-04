@@ -43,7 +43,13 @@
    <arg value="-l" />
 
    <fileset dir="${basedir}/src">
-    <include name="**/*.php/*.module/*.inc/*.install/*.engine/*.test/*.profile" />
+    <include name="**/*.php" />
+    <include name="**/*.module" />
+    <include name="**/*.inc" />
+    <include name="**/*.install" />
+    <include name="**/*.engine" />
+    <include name="**/*.test" />
+    <include name="**/*.profile" />
     <modified />
    </fileset>
   </apply>
