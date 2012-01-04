@@ -57,6 +57,18 @@
   </apply>
  </target>
 
+ <target name="simpletest"
+         description="Run Drupal testsuite">
+  <exec executable="drush">
+   <arg value="-r" />
+   <arg path="${basedir}/src" />
+   <arg value="-y" />
+   <arg value="si" />
+   <arg value="--db-url=mysql://root:sfauditor@localhost/drpl_7_drupal_php_jenkins_template" />
+  </exec>
+
+ </target>
+
  <target name="phploc" description="Measure project size using PHPLOC">
   <exec executable="phploc">
    <arg value="--log-csv" />
@@ -65,18 +77,6 @@
    <arg value="module,info,inc,php,install,engine,js,css,xml,test,html,sh,profile,script" />
    <arg path="${basedir}/src" />
   </exec>
- </target>
-
- <target name="simpletest"
-         description="Run Drupal testsuite">
-  <exec executable="drush">
-   <arg value="-r" />
-   <arg path="${basedir}/src" />
-   <arg value="-y" />
-   <arg value="si" />
-   <arg value="--db-url=mysql:root:sfauditor@localhost/drpl_7_drupal_php_jenkins_template" />
-  </exec>
-
  </target>
 
  <target name="pdepend"
