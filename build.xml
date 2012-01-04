@@ -2,7 +2,7 @@
 
 <project name="Drupal" default="build">
  <target name="build"
-   depends="prepare,lint,phploc,simpletest,pdepend,phpmd-ci,phpcs-ci,phpcpd,doxygen,phpcb"/>
+   depends="prepare,simpletest,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,doxygen,phpcb"/>
 
  <target name="build-parallel"
    depends="prepare,lint,tools-parallel,phpcb"/>
