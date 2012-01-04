@@ -67,6 +67,14 @@
    <arg value="--db-url=mysql://root:sfauditor@localhost/drpl_7_drupal_php_jenkins_template" />
   </exec>
 
+  <exec executable="drush">
+   <arg value="-r" />
+   <arg path="${basedir}/src" />
+   <arg value="-y" />
+   <arg value="en" />
+   <arg value="simpletest" />
+  </exec>
+
  </target>
 
  <target name="phploc" description="Measure project size using PHPLOC">
